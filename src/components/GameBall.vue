@@ -11,7 +11,7 @@ export default {
 <style scoped>
 .ball {
   position: absolute;
-  background-color: #9b1313;
+  background-color: #00eeff;
   border-radius: 50%;
 }
 </style>

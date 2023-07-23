@@ -11,7 +11,8 @@ export default {
 <style scoped>
 .ball {
   position: absolute;
-  background-color: #00eeff;
+  background: radial-gradient(circle at 30% 30%, #5fcfff, #005a9b 50%, #0066ff);
   border-radius: 50%;
+  box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.6);
 }
 </style>

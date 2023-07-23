@@ -33,7 +33,7 @@ export default {
       this.y=200;
       this.wid=15;
       this.hgt=15;
-      this.speed=2;
+      this.speed=5;
       this.dx=3;
       this.dy=2;
     },
@@ -86,6 +86,7 @@ export default {
   position: absolute;
   background: radial-gradient(circle at 30% 30%, #5fcfff, #005a9b 50%, #0066ff);
   border-radius: 50%;
-  box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.6);
+  /* box-shadow: 1px 1px 2px rgba(255, 255, 255, 0.856); */
+  /* box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.6); */
 }
 </style>

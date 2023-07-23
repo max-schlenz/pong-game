@@ -66,7 +66,7 @@ export default {
     position: absolute;
     background: linear-gradient(to right, #0074D9, #0047AB); /* Gradient for depth */
     box-shadow: 
-        5px 2px 10px rgba(0, 174, 255, 0.5), /* Brighter cyan glow to the left */
+        2px 3px 5px rgba(0, 174, 255, 0.5), /* Brighter cyan glow to the left */
         -3px 0 15px rgba(0, 0, 0, 0.3), /* Darker inner shadow on the left */
         inset 2px 3px 3px rgba(255, 255, 255, 0.2),
         inset -2px -3px 3px rgba(0, 0, 0, 0.5),

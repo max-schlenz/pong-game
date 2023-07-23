@@ -11,6 +11,7 @@
 	}
 </script>
 
+
 <style>
 #app {
 	display: flex;
@@ -23,6 +24,7 @@
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
 }
+
 body {
 	color: white;
 	background-color: #181818; /* Change this to your desired color */

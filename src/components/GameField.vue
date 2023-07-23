@@ -1,16 +1,14 @@
 <template>
 	<div class="field" ref="gameField">
-		<p>Ball Position: X: {{ ballX }} Y: {{ ballY }}</p>
-		<p>Ball Dimensions: Width: {{ ballWidth }}, Height: {{ ballHeight }}</p>
-		<p>Ball Direction: DX: {{ ballDX }}, DY: {{ ballDY }}</p>
-		<p>Paddle Position: X: {{ paddleX }}, Y: {{ paddleY }}</p>
-		<p>Paddle Dimensions: Width: {{ paddleWidth }}, Height: {{ paddleHeight }}</p>
-		<p>Paddle Movement: isMovingUp: {{ isMovingUp }}, isMovingDown: {{ isMovingDown }}</p>
-		<p>Game Status: isPaused: {{ isPaused }}</p>
-		<p>Mouse Position: X: {{ mouseX }}, Y: {{ mouseY }}</p>
-		<p>Hit Count: {{ hitCount }} Ball Speed : {{ ballSpeed }} </p>
-		<GameBall :posX="ballX" :posY="ballY" :width="ballWidth" :height="ballHeight" />
-		<GamePaddle ref="paddle" :posX="paddleX" :posY="paddleY" :height="paddleHeight" :width="paddleWidth" />
+		<div class="left-border"></div>
+		<div class="right-border"></div>
+		<GameBall ref="ball"
+		:fieldHeight="fieldHeight"
+		:fieldWidth="fieldWidth"
+		/>
+		<GamePaddle ref="paddleA" 
+		:fieldHeight="fieldHeight"
+		/>
 	</div>
 </template>
 
@@ -27,40 +25,33 @@ export default {
   mounted() {
 	this.fieldWidth = this.$refs.gameField.clientWidth;
 	this.fieldHeight = this.$refs.gameField.clientHeight;
-	this.update();
+	setTimeout(() => {this.update();}, 200);
   },
+
   data() {
 	return {
-		hitCount: 5,
-		ballSpeed: 10,
-		ballX: 500,
-		ballY: 200,
-		ballWidth: 15,
-		ballHeight: 15,
-		paddleSpeed: 7,
-		paddleX: 5,
-		paddleY: 100,
-		paddleWidth: 15,
-		paddleHeight: 120,
+		hitCount: 0,
+
 		isMovingUp: false,
 		isMovingDown: false,
 		isPaused: false,
-		ballDX: 3,
-		ballDY: 0,
+
 		mouseX: null,
 		mouseY: null,
 		fieldWidth: null,
 		fieldHeight: null
 	}
   },
+
   methods: {
 	resetGame() {
+		this.$refs.ball.resetBall()
 		this.hitCount = 0;
-		this.ballSpeed = 1;
-		this.ballX = 500,
-		this.ballY = 200;
-		this.paddleX = 5;
-		this.paddleY = 100;
+		// this.ballSpeed = 1;
+		// this.ballX = 500,
+		// this.ballY = 200;
+		// this.$refs.paddle.paddleX = 5;
+		// this.$refs.paddle.paddleY = 100;
 		this.isMovingUp = false;
 		this.isMovingDown = false;
 	},
@@ -71,27 +62,24 @@ export default {
 			requestAnimationFrame(this.update);
 			return ;
 		}
-		this.movePaddle()
-		this.moveBall();
-		// this.checkGameOver();
-		requestAnimationFrame(this.update);
-	},
 
-	movePaddle() {
-		if (this.isMovingUp)
+		if (this.$refs.paddleA && this.isMovingUp)
+			this.$refs.paddleA.movePaddleUp();
+
+		else if (this.$refs.paddleA && this.isMovingDown)
+			this.$refs.paddleA.movePaddleDown();
+
+		if (this.$refs.ball && this.$refs.paddleA)
 		{
-			if (this.paddleY > this.paddleSpeed)
-				this.paddleY -= this.paddleSpeed;
-			else
-				this.paddleY = 0;
+			if (!this.$refs.ball.moveBall(
+				this.$refs.paddleA.getPaddleX(), 
+				this.$refs.paddleA.getPaddleY(), 
+				this.$refs.paddleA.getPaddleWidth(), 
+				this.$refs.paddleA.getPaddleHeight()))
+					this.resetGame();
 		}
-		else if (this.isMovingDown)
-		{
-			if (this.paddleY >= (this.fieldHeight - this.paddleHeight - 1))
-				this.paddleY = this.fieldHeight - this.paddleHeight;
-			else
-				this.paddleY += this.paddleSpeed;
-		}
+
+		requestAnimationFrame(this.update);
 	},
 
 	updateMousePosition(event) {
@@ -99,55 +87,14 @@ export default {
 		this.mouseY = event.clientY;
 	},
 
-	// checkGameOver() {
-	// 	// if ((this.ballX + this.ballWidth < this.paddleX + this.paddleWidth) &&
-	// 	// 	(this.ballY + this.ballHeight < this.paddleY + this.paddleHeight) ||
-	// 	// 	(this.ballY > this.paddleY))
-	// 	// ;
-	// 	// console.log(window.innerWidth);
-	// 	if (this.ballX < 10)// || this.ballX > window.innerWidth - 20)
-	// 		this.resetGame();
-	// },
-
-	moveBallDir() {
-		let paddleMid = this.paddleY + (this.paddleHeight / 2);
-		let ballMid = this.ballY + (this.ballHeight / 2);
-		let paddleHitLocation = (ballMid - paddleMid) / (this.paddleHeight / 2);
-		let bounceAngle = (paddleHitLocation * 45) * Math.PI / 180;
-		this.ballSpeed = Math.sqrt(this.ballDX * this.ballDX + this.ballDY * this.ballDY) + this.hitCount;
-
-		this.ballDX = -this.ballSpeed * Math.cos(bounceAngle);
-		this.ballDY = this.ballSpeed * Math.sin(bounceAngle);
-		this.ballDX = -this.ballDX;
-		
-		this.ballX = this.paddleX + this.paddleWidth; //fix ball sometimes glitching into paddle
-		this.hitCount++;
-	},
-
-	moveBall() {
-		// Before updating ballX and ballY, predict the next position
-		let nextBallX = this.ballX + this.ballDX;
-		let nextBallY = this.ballY + this.ballDY;
-
-		if (nextBallX < 0) // || nextBallY + this.ballHeight > this.fieldHeight) {
+	checkGameOver() {
+		// if ((this.ballX + this.ballWidth < this.$refs.paddle.paddleX + this.$refs.paddle.paddleWidth) &&
+		// 	(this.ballY + this.ballHeight < this.$refs.paddle.paddleY + this.$refs.paddle.paddleHeight) ||
+		// 	(this.ballY > this.$refs.paddle.paddleY))
+		// ;
+		// console.log(window.innerWidth);
+		if (this.$refs.ball.ballX < 10)// || this.ballX > window.innerWidth - 20)
 			this.resetGame();
-
-		else if (nextBallX + this.ballWidth > this.fieldWidth)
-			this.ballDX = -this.ballDX;
-
-		else if (nextBallY + this.ballHeight > this.fieldHeight)
-			this.ballDY = -this.ballDY;
-
-		else if ((nextBallX + this.ballWidth >= this.paddleX) &&
-			(nextBallX < this.paddleX + this.paddleWidth) &&
-			(nextBallY + this.ballHeight >= this.paddleY) &&
-			(nextBallY < this.paddleY + this.paddleHeight)) {
-				this.moveBallDir();
-		}
-		else {
-			this.ballX = nextBallX;
-			this.ballY = nextBallY;
-		}
 	},
 
 	keyHookDown(e) {
@@ -175,6 +122,7 @@ export default {
 		}
 	}
   },
+
   created() {
 	window.addEventListener('keydown', this.keyHookDown);
 	window.addEventListener('keyup', this.keyHookUp);
@@ -184,18 +132,49 @@ export default {
 </script>
 
 <style scoped>
-.field {
-    width: 800px;
-    height: 600px;
-    position: relative;
-    background-color: transparent;
-    border-radius: 0%;
-    box-sizing: border-box;
-    border: 10px solid #979797;
-    box-shadow: 
-        inset -2px -2px 5px #cdcdcd,
-        inset 2px 2px 5px #cdcdcd;
-}
+	.field {
+		width: 800px;
+		height: 600px;
+		position: relative;
+		background-color: transparent;
+		border-radius: 0%;
+		box-sizing: border-box;
+		overflow: hidden; 
+	}
 
+	.field::before, .field::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		height: 2px;
+		background: linear-gradient(to right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.5));
+	}
+
+	.field::before {
+		top: 0;
+	}
+
+	.field::after {
+		bottom: 0;
+	}
+
+	.left-border, .right-border {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 2px;
+		background-image: linear-gradient(rgba(255, 255, 255, 0.5) 33%, rgba(0, 0, 0, 0) 0%);
+		background-size: 100% 10px;
+	}
+
+	.left-border {
+		left: 0;
+	}
+
+	.right-border {
+		right: 0;
+	}
 </style>
+
 

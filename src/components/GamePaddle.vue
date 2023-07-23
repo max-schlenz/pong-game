@@ -1,24 +1,76 @@
 <template>
-  <div class="paddle" :style="{ top: `${posY}px`, left: `${posX}px`, height: `${height}px`, width: `${width}px`}"></div>
+	<div class="paddle" 
+	:style="{ 
+		top: `${y}px`, 
+		left: `${x}px`, 
+		height: `${hgt}px`, 
+		width: `${wid}px`
+	}"
+	>
+</div>
 </template>
 
 <script>
 export default {
-  props: ['posX', 'posY', 'height', 'width'],
+	props: ['top', 'left', 'height', 'width', 'fieldHeight'],
+		data() { return {
+			x: 1,
+			y: 100,
+			wid: 15,
+			hgt: 120,
+			speed: 7
+		}
+	},
+
+	methods: {
+		getPaddleX() {
+			return this.x;
+		},
+		
+		getPaddleY() {
+			return this.y;
+		},
+
+		getPaddleWidth() {
+			return this.wid;
+		},
+
+		getPaddleHeight() {
+			return this.hgt;
+		},
+
+		getPaddleSpeed() {
+			return this.speed;
+		},
+
+		movePaddleUp() {
+				if (this.y > this.speed)
+					this.y -= this.speed;
+				else
+					this.y = 0;
+		},
+
+		movePaddleDown() {
+				if (this.y >= (this.fieldHeight - this.hgt - 1))
+					this.y = this.fieldHeight - this.hgt;
+				else
+					this.y += this.speed;
+		}
+	}
 }
+
 </script>
 
 <style scoped>
 .paddle {
-  position: absolute;
-  border-radius: 0px;
-  background: #005a9b;
-  box-shadow: 
-    -7px 0 15px rgba(0, 166, 255, 0.9), 
-    -2px 0 10px rgba(0, 0, 0, 0.5), 
-    inset 1px 1px 1px rgba(255, 255, 255, 0.1), 
-    inset -1px -1px 1px rgba(0, 0, 0, 0.4), 
-    inset 1px 0 1px rgba(255, 255, 255, 0.2), 
-    inset -1px 0 1px rgba(0, 0, 0, 0.25);
+    position: absolute;
+    background: linear-gradient(to right, #0074D9, #0047AB); /* Gradient for depth */
+    box-shadow: 
+        5px 2px 10px rgba(0, 174, 255, 0.5), /* Brighter cyan glow to the left */
+        -3px 0 15px rgba(0, 0, 0, 0.3), /* Darker inner shadow on the left */
+        inset 2px 3px 3px rgba(255, 255, 255, 0.2),
+        inset -2px -3px 3px rgba(0, 0, 0, 0.5),
+        inset 2px 0 5px rgba(255, 255, 255, 0.3),
+        inset -2px 0 5px rgba(0, 0, 0, 0.3);
 }
 </style>

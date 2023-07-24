@@ -13,7 +13,7 @@
 <script>
 
 export default {
-  props: ['posX', 'posY', 'width', 'height', 'fieldWidth', 'fieldHeight'],
+  props: ['posX', 'posY', 'width', 'height', 'fieldWidth', 'fieldHeight', 'socket'],
   data() {
     return {
       x: 500,
@@ -23,6 +23,16 @@ export default {
       speed: 5,
       dx: 4,
       dy: 3
+    }
+  },
+
+  watch: {
+    x(newX) {
+      this.socket.emit('ballX', newX);
+    },
+
+    y(newY) {
+      this.socket.emit('ballY', newY);
     }
   },
   

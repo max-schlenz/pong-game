@@ -5,9 +5,11 @@
 		<GameBall ref="ball"
 		:fieldHeight="fieldHeight"
 		:fieldWidth="fieldWidth"
+		:socket="socket"
 		/>
 		<GamePaddle ref="paddleA" 
 		:fieldHeight="fieldHeight"
+		:socket="socket"
 		/>
 	</div>
 </template>
@@ -15,6 +17,7 @@
 <script>
 import GamePaddle from './GamePaddle.vue'
 import GameBall from './GameBall.vue'
+import { io } from "socket.io-client";
 
 export default {
   name: 'App',
@@ -25,6 +28,16 @@ export default {
   mounted() {
 	this.fieldWidth = this.$refs.gameField.clientWidth;
 	this.fieldHeight = this.$refs.gameField.clientHeight;
+	this.socket = io("http://localhost:3000", { transports: [ 'websocket' ]});
+	
+	this.socket.on("connect", () => {
+		console.log("Connected to Server");
+		this.socket.emit("message", "Hello");
+	});
+	
+	this.socket.on("message", (data) => {
+		console.log("Recieved: ", data);
+	});
 	setTimeout(() => {this.update();}, 200);
   },
 
@@ -39,7 +52,9 @@ export default {
 		mouseX: null,
 		mouseY: null,
 		fieldWidth: null,
-		fieldHeight: null
+		fieldHeight: null,
+
+		socket: null
 	}
   },
 

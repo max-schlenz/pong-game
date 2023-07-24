@@ -12,13 +12,19 @@
 
 <script>
 export default {
-	props: ['top', 'left', 'height', 'width', 'fieldHeight'],
+	props: ['top', 'left', 'height', 'width', 'fieldHeight', 'socket'],
 		data() { return {
 			x: 1,
 			y: 100,
 			wid: 15,
 			hgt: 120,
 			speed: 7
+		}
+	},
+
+	watch: {
+		y(newY) {
+			this.socket.emit('paddleY', newY);
 		}
 	},
 
@@ -44,17 +50,17 @@ export default {
 		},
 
 		movePaddleUp() {
-				if (this.y > this.speed)
-					this.y -= this.speed;
-				else
-					this.y = 0;
+			if (this.y > this.speed)
+				this.y -= this.speed;
+			else
+				this.y = 0;
 		},
-
+		
 		movePaddleDown() {
-				if (this.y >= (this.fieldHeight - this.hgt - 1))
-					this.y = this.fieldHeight - this.hgt;
-				else
-					this.y += this.speed;
+			if (this.y >= (this.fieldHeight - this.hgt - 1))
+				this.y = this.fieldHeight - this.hgt;
+			else
+				this.y += this.speed;
 		}
 	}
 }

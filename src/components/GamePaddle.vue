@@ -22,11 +22,11 @@ export default {
 		}
 	},
 
-	watch: {
-		y(newY) {
-			this.socket.emit('paddleY', newY);
-		}
-	},
+	// watch: {
+	// 	y(newY) {
+	// 		this.socket.emit('paddleY', newY);
+	// 	}
+	// },
 
 	methods: {
 		getPaddleX() {
@@ -37,6 +37,14 @@ export default {
 			return this.y;
 		},
 
+		setY(newY) {
+			this.y = newY;
+		},
+
+		setX(newX) {
+			this.x = newX;
+		},
+		
 		getPaddleWidth() {
 			return this.wid;
 		},
@@ -54,6 +62,7 @@ export default {
 				this.y -= this.speed;
 			else
 				this.y = 0;
+			this.socket.emit('paddleMove', this.y);
 		},
 		
 		movePaddleDown() {
@@ -61,6 +70,7 @@ export default {
 				this.y = this.fieldHeight - this.hgt;
 			else
 				this.y += this.speed;
+			this.socket.emit('paddleMove', this.y);
 		}
 	}
 }

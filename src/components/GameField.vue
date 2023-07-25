@@ -1,16 +1,26 @@
 <template>
-	<div class="field" ref="gameField">
-		<div class="left-border"></div>
-		<div class="right-border"></div>
-		<GameBall ref="ball"
-		:fieldHeight="fieldHeight"
-		:fieldWidth="fieldWidth"
-		:socket="socket"
-		/>
-		<GamePaddle ref="paddleA" 
-		:fieldHeight="fieldHeight"
-		:socket="socket"
-		/>
+	<div>
+		<div class="field" ref="gameField">
+			<div class="left-border"></div>
+			<div class="right-border"></div>
+			<GameBall ref="ball"
+			:fieldHeight="fieldHeight"
+			:fieldWidth="fieldWidth"
+			:socket="socket"
+			/>
+			<GamePaddle ref="paddleA" 
+			:fieldHeight="fieldHeight"
+			:socket="socket"
+			/>
+			<GamePaddle ref="paddleB" 
+			:fieldHeight="fieldHeight"
+			:socket="socket"
+			/>
+		</div>
+		<form @submit.prevent="connectToWS">
+      <input type="text" v-model="serverIp" placeholder="Enter Server IP"/>
+      <button type="submit">Connect</button>
+    </form>
 	</div>
 </template>
 
@@ -28,17 +38,21 @@ export default {
   mounted() {
 	this.fieldWidth = this.$refs.gameField.clientWidth;
 	this.fieldHeight = this.$refs.gameField.clientHeight;
-	this.socket = io("http://localhost:3000", { transports: [ 'websocket' ]});
-	
-	this.socket.on("connect", () => {
-		console.log("Connected to Server");
-		this.socket.emit("message", "Hello");
-	});
-	
-	this.socket.on("message", (data) => {
-		console.log("Recieved: ", data);
-	});
+
 	setTimeout(() => {this.update();}, 200);
+	this.$refs.paddleA.setX(1);
+	this.$refs.paddleB.setX(this.fieldWidth - 15);
+  },
+
+  watch: {
+	isMovingUp(newState){
+		this.socket.emit('moveUp', newState);
+	},
+
+	isMovingDown(newState){
+		this.socket.emit('moveDown', newState);
+	}
+	
   },
 
   data() {
@@ -54,7 +68,8 @@ export default {
 		fieldWidth: null,
 		fieldHeight: null,
 
-		socket: null
+		socket: null,
+		serverIp: null
 	}
   },
 
@@ -67,8 +82,43 @@ export default {
 		// this.ballY = 200;
 		// this.$refs.paddle.paddleX = 5;
 		// this.$refs.paddle.paddleY = 100;
-		this.isMovingUp = false;
-		this.isMovingDown = false;
+		this.isMovingUpA = false;
+		this.isMovingDownA = false;
+
+		this.isMovingUpB = false;
+		this.isMovingDownB = false;
+	},
+
+	connectToWS() {
+		if (this.socket)
+			this.socket.close();
+		this.socket = io(`http://${this.serverIp}:3000`, { transports: [ 'websocket' ]});
+
+		this.socket.on("connect", () => {
+			console.log("Connected to Server");
+			this.socket.emit("message", "Hello");
+		});
+
+		// this.socket.on("moveUp", (data) => {
+		// 	if (data)
+		// 		this.isMovingUp = true;
+		// 	else
+		// 		this.isMovingUp = false;
+		// });
+		
+		// this.socket.on("moveDown", (data) => {
+		// 	if (data)
+		// 		this.isMovingDown = true;
+		// 	else
+		// 		this.isMovingDown = false;
+		// });
+		this.socket.on('paddleAMove', (newPos) => {
+			this.$refs.paddleA.setY(newPos);
+		});
+
+		this.socket.on('paddleBMove', (newPos) => {
+			this.$refs.paddleB.setY(newPos);
+		});
 	},
 
 	update() {

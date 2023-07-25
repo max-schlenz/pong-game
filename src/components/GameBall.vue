@@ -26,15 +26,15 @@ export default {
     }
   },
 
-  watch: {
-    x(newX) {
-      this.socket.emit('ballX', newX);
-    },
+//   watch: {
+//     x(newX) {
+//       this.socket.emit('ballX', newX);
+//     },
 
-    y(newY) {
-      this.socket.emit('ballY', newY);
-    }
-  },
+//     y(newY) {
+//       this.socket.emit('ballY', newY);
+//     }
+//   },
   
   methods: {
 

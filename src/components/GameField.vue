@@ -69,7 +69,9 @@ export default {
 		fieldHeight: null,
 
 		socket: null,
-		serverIp: null
+		serverIp: null,
+
+		side: null
 	}
   },
 
@@ -82,6 +84,7 @@ export default {
 		// this.ballY = 200;
 		// this.$refs.paddle.paddleX = 5;
 		// this.$refs.paddle.paddleY = 100;
+
 		this.isMovingUpA = false;
 		this.isMovingDownA = false;
 
@@ -92,7 +95,7 @@ export default {
 	connectToWS() {
 		if (this.socket)
 			this.socket.close();
-		this.socket = io(`http://${this.serverIp}:3000`, { transports: [ 'websocket' ]});
+		this.socket = io(`localhost:3000`, { transports: [ 'websocket' ]});
 
 		this.socket.on("connect", () => {
 			console.log("Connected to Server");
@@ -118,15 +121,22 @@ export default {
 			// });
 
 			
+			this.socket.on("direction", (data) => {
+				this.side = data;
+				console.log("side: ", data);
+			});
+			
 			this.socket.on("paddleMove", ({ playerId, newPos }) => {
-			console.log("here");
-			if (playerId === 'left')
+			console.log(playerId);
+			if (playerId == 'left')
 			{
+				
 				this.$refs.paddleA.setY(newPos);
 				console.log(newPos);
 			}
 			else
 			{
+				
 				this.$refs.paddleB.setY(newPos);
 				console.log(newPos);
 			}
@@ -144,11 +154,24 @@ export default {
 			return ;
 		}
 
-		if (this.$refs.paddleA && this.isMovingUp)
-			this.$refs.paddleA.movePaddleUp();
+		if (this.side && this.side == "left")
+		{
+			if (this.$refs.paddleA && this.isMovingUp)
+				this.$refs.paddleA.movePaddleUp();
 
-		else if (this.$refs.paddleA && this.isMovingDown)
-			this.$refs.paddleA.movePaddleDown();
+			else if (this.$refs.paddleA && this.isMovingDown)
+				this.$refs.paddleA.movePaddleDown();
+
+		}
+
+		else if (this.side && this.side == "right")
+		{
+			if (this.$refs.paddleB && this.isMovingUp)
+				this.$refs.paddleB.movePaddleUp();
+
+			else if (this.$refs.paddleB && this.isMovingDown)
+				this.$refs.paddleB.movePaddleDown();
+		}
 
 		if (this.$refs.ball && this.$refs.paddleA)
 		{

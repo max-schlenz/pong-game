@@ -41,7 +41,7 @@ export default {
 
 	setTimeout(() => {this.update();}, 200);
 	this.$refs.paddleA.setX(1);
-	this.$refs.paddleB.setX(this.fieldWidth - 15);
+	this.$refs.paddleB.setX(this.fieldWidth - this.$refs.paddleB.getPaddleWidth() - 1);
   },
 
   watch: {
@@ -112,13 +112,29 @@ export default {
 		// 	else
 		// 		this.isMovingDown = false;
 		// });
-		this.socket.on('paddleAMove', (newPos) => {
-			this.$refs.paddleA.setY(newPos);
+			// this.socket.on('paddleMove', (newPos) => {
+			// 	console.log(newPos);
+			// 	console.log("newPos");
+			// });
+
+			
+			this.socket.on("paddleMove", ({ playerId, newPos }) => {
+			console.log("here");
+			if (playerId === 'left')
+			{
+				this.$refs.paddleA.setY(newPos);
+				console.log(newPos);
+			}
+			else
+			{
+				this.$refs.paddleB.setY(newPos);
+				console.log(newPos);
+			}
 		});
 
-		this.socket.on('paddleBMove', (newPos) => {
-			this.$refs.paddleB.setY(newPos);
-		});
+		// this.socket.on('paddleBMove', (newPos) => {
+		// 	this.$refs.paddleB.setY(newPos);
+		// });
 	},
 
 	update() {
@@ -184,6 +200,9 @@ export default {
 			case 'ArrowDown':
 				this.isMovingDown = false;
 				break;
+			// case 'ArrowLeft':
+			// 	this.$refs.paddleA.setY(500);
+			// 	break;
 		}
 	}
   },

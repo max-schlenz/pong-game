@@ -18,8 +18,8 @@ export default {
     return {
       x: 500,
       y: 200,
-      wid: 15,
-      hgt: 15,
+      wid: 150,
+      hgt: 150,
       speed: 5,
       dx: 4,
       dy: 3
@@ -99,7 +99,7 @@ moveBall(paddleAX, paddleAY, paddleBX, paddleBY, paddleWidth, paddleHeight) {
 	}
 	else if (this.handleBallCollision(paddleBX, paddleBY, paddleWidth, paddleHeight, "B")){
 		this.moveBallDir(paddleBY, paddleHeight, "B");
-		this.x = paddleBX - paddleWidth;
+		this.x = paddleBX - this.wid;
 	}
 	else {
 		this.x = this.nextBallX;

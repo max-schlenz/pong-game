@@ -18,8 +18,8 @@ export default {
     return {
       x: 500,
       y: 200,
-      wid: 150,
-      hgt: 150,
+      wid: 15,
+      hgt: 15,
       speed: 5,
       dx: 4,
       dy: 3

@@ -177,7 +177,9 @@ export default {
 		{
 			if (!this.$refs.ball.moveBall(
 				this.$refs.paddleA.getPaddleX(), 
-				this.$refs.paddleA.getPaddleY(), 
+				this.$refs.paddleA.getPaddleY(),
+				this.$refs.paddleB.getPaddleX(), 
+				this.$refs.paddleB.getPaddleY(), 
 				this.$refs.paddleA.getPaddleWidth(), 
 				this.$refs.paddleA.getPaddleHeight()))
 					this.resetGame();

@@ -44,17 +44,6 @@ export default {
 	this.$refs.paddleB.setX(this.fieldWidth - this.$refs.paddleB.getPaddleWidth() - 1);
   },
 
-  watch: {
-	isMovingUp(newState){
-		this.socket.emit('moveUp', newState);
-	},
-
-	isMovingDown(newState){
-		this.socket.emit('moveDown', newState);
-	}
-	
-  },
-
   data() {
 	return {
 		hitCount: 0,
@@ -71,7 +60,9 @@ export default {
 		socket: null,
 		serverIp: null,
 
-		side: null
+		side: null,
+
+		start: false
 	}
   },
 
@@ -139,7 +130,16 @@ export default {
 				
 				this.$refs.paddleB.setY(newPos);
 				console.log(newPos);
+				this.start = true;
 			}
+
+			this.socket.on("ballX", (data) => {
+				this.$refs.ball.setX(data);
+			})
+
+			this.socket.on("ballY", (data) => {
+				this.$refs.ball.setY(data);
+			})
 		});
 
 		// this.socket.on('paddleBMove', (newPos) => {

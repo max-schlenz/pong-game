@@ -62,6 +62,7 @@ export default {
 
 		side: null,
 
+		numClients: 0,
 		start: false
 	}
   },
@@ -85,61 +86,39 @@ export default {
 
 	connectToWS() {
 		if (this.socket)
+		{
 			this.socket.close();
+		}
+			
 		this.socket = io(`localhost:3000`, { transports: [ 'websocket' ]});
 
 		this.socket.on("connect", () => {
 			console.log("Connected to Server");
 			this.socket.emit("message", "Hello");
 		});
-
-		// this.socket.on("moveUp", (data) => {
-		// 	if (data)
-		// 		this.isMovingUp = true;
-		// 	else
-		// 		this.isMovingUp = false;
-		// });
 		
-		// this.socket.on("moveDown", (data) => {
-		// 	if (data)
-		// 		this.isMovingDown = true;
-		// 	else
-		// 		this.isMovingDown = false;
-		// });
-			// this.socket.on('paddleMove', (newPos) => {
-			// 	console.log(newPos);
-			// 	console.log("newPos");
-			// });
-
-			
-			this.socket.on("direction", (data) => {
-				this.side = data;
-				console.log("side: ", data);
-			});
-			
-			this.socket.on("paddleMove", ({ playerId, newPos }) => {
-			console.log(playerId);
+		this.socket.on("direction", (data) => {
+			this.side = data;
+			console.log("side: ", data);
+		});
+		
+		this.socket.on("paddleMove", ({ playerId, newPos }) => {
 			if (playerId == 'left')
-			{
-				
 				this.$refs.paddleA.setY(newPos);
-				console.log(newPos);
-			}
 			else
-			{
-				
 				this.$refs.paddleB.setY(newPos);
-				console.log(newPos);
-				this.start = true;
-			}
+		});
 
-			this.socket.on("ballX", (data) => {
-				this.$refs.ball.setX(data);
-			})
+		this.socket.on("ballX", (data) => {
+			this.$refs.ball.setX(data);
+		});
 
-			this.socket.on("ballY", (data) => {
-				this.$refs.ball.setY(data);
-			})
+		this.socket.on("ballY", (data) => {
+			this.$refs.ball.setY(data);
+		});
+
+		this.socket.on("startGame", () => {
+			this.start = true;
 		});
 
 		// this.socket.on('paddleBMove', (newPos) => {
@@ -148,7 +127,7 @@ export default {
 	},
 
 	update() {
-		if (this.isPaused)
+		if (this.isPaused || this.start == false)
 		{
 			requestAnimationFrame(this.update);
 			return ;
@@ -177,7 +156,9 @@ export default {
 		{
 			if (!this.$refs.ball.moveBall(
 				this.$refs.paddleA.getPaddleX(), 
-				this.$refs.paddleA.getPaddleY(), 
+				this.$refs.paddleA.getPaddleY(),
+				this.$refs.paddleB.getPaddleX(), 
+				this.$refs.paddleB.getPaddleY(), 
 				this.$refs.paddleA.getPaddleWidth(), 
 				this.$refs.paddleA.getPaddleHeight()))
 					this.resetGame();

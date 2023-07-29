@@ -43,11 +43,11 @@ export default {
 		setX(newX) {
 			this.x = newX;
 		},
-
+		
 		setY(newY) {
 			this.y = newY;
 		},
-
+		
 		resetBall() {
 			this.x=500;
 			this.y=200;
@@ -58,43 +58,75 @@ export default {
 			this.dy=2;
 		},
 		
-		moveBallDir(paddleX, paddleY, paddleWidth, paddleHeight) {
+		moveBallDir(paddleY, paddleHeight, paddle) {
 			let paddleMid = paddleY + (paddleHeight / 2);
 			let ballMid = this.y + (this.hgt / 2);
 			let paddleHitLocation = (ballMid - paddleMid) / (paddleHeight / 2);
 			let bounceAngle = (paddleHitLocation * 45) * Math.PI / 180;
 			
-			this.dx = -this.speed * Math.cos(bounceAngle);
-			this.dy = this.speed * Math.sin(bounceAngle);
-			this.dx = -this.dx;
+			if (paddle == "A")
+				this.dx = -this.speed * Math.cos(bounceAngle);
+			else
+				this.dx = this.speed * Math.cos(bounceAngle);
+				this.dy = this.speed * Math.sin(bounceAngle);
+				this.dx = -this.dx;
 			
-			this.x = paddleX + paddleWidth; //fix ball sometimes glitching into paddle
+			// if (this.socket)
+			// {
+			// 	this.socket.emit('ballX', this.x);
+			// 	this.socket.emit('ballY', this.y);
+			// }
 			this.speed++;
 		},
 		
-		moveBall(paddleX, paddleY, paddleWidth, paddleHeight) {
-			let nextBallX = this.x + this.dx;
-			let nextBallY = this.y + this.dy;
-			
-			if ((nextBallX < 0) ) // || nextBallY + this.wid > this.fieldWidth)
+		handleBallCollision(paddleX, paddleY, paddleWidth, paddleHeight, paddle) {
+			if (paddle == "A"){
+				if ((this.nextBallX < paddleX + paddleWidth) &&
+				(this.nextBallY + this.hgt >= paddleY) &&
+				(this.nextBallY < paddleY + paddleHeight))
+					return true;
 				return false;
-			
-			else if (nextBallX + this.wid > this.fieldWidth)
-			this.dx = -this.dx;
-			
-			else if (nextBallY + this.hgt > this.fieldHeight || nextBallY < 0)
-			this.dy = -this.dy;
-			
-			else if ((nextBallX + this.wid >= paddleX) &&
-				(nextBallX < paddleX + paddleWidth) &&
-				(nextBallY + this.hgt >= paddleY) &&
-				(nextBallY < paddleY + paddleHeight))
-					this.moveBallDir(paddleX, paddleY, paddleWidth, paddleHeight);
-			
-			else {
-				this.x = nextBallX;
-				this.y = nextBallY;
 			}
+			else {
+				if ((this.nextBallX + this.wid >= paddleX) && 
+				(this.nextBallY <= paddleY + paddleHeight) &&
+				(this.nextBallY + this.hgt >= paddleY))
+					return true;
+				return false;
+			}
+		},
+		
+		moveBall(paddleAX, paddleAY, paddleBX, paddleBY, paddleWidth, paddleHeight) {
+			this.nextBallX = this.x + this.dx;
+			this.nextBallY = this.y + this.dy;
+			
+			if ((this.nextBallX < 0) ) // || nextBallY + this.wid > this.fieldWidth)
+				return false;
+
+			if (this.nextBallX - 1 <= 0)
+				this.dx = -this.dx;
+
+			if (this.nextBallX + this.wid > this.fieldWidth)
+				this.dx = -this.dx;
+
+			if (this.nextBallY + this.hgt > this.fieldHeight || this.nextBallY < 0)
+				this.dy = -this.dy;
+
+			if (this.handleBallCollision(paddleAX, paddleAY, paddleWidth, paddleHeight, "A")){
+				this.moveBallDir(paddleAY, paddleHeight, "A");
+				this.x = paddleAX + paddleWidth;
+			}
+
+			else if (this.handleBallCollision(paddleBX, paddleBY, paddleWidth, paddleHeight, "B")){
+				this.moveBallDir(paddleBY, paddleHeight, "B");
+				this.x = paddleBX - this.wid;
+			}
+
+			else {
+				this.x = this.nextBallX;
+				this.y = this.nextBallY;
+			}
+
 			return true;
 		}
 	}

@@ -132,15 +132,23 @@ export default {
 			{
 				
 				this.$refs.paddleA.setY(newPos);
-				console.log(newPos);
+				// console.log(newPos);
 			}
 			else
 			{
 				
 				this.$refs.paddleB.setY(newPos);
-				console.log(newPos);
+				// console.log(newPos);
 			}
-		});
+			});
+
+			this.socket.on("ballUpdate", ({ dx, dy, x, y, speed }) => {
+				this.$refs.ball.setDx(dx);
+				this.$refs.ball.setDy(dy);
+				this.$refs.ball.setX(x);
+				this.$refs.ball.setY(y);
+				this.$refs.ball.setSpeed(speed);
+			});
 
 		// this.socket.on('paddleBMove', (newPos) => {
 		// 	this.$refs.paddleB.setY(newPos);
@@ -173,15 +181,17 @@ export default {
 				this.$refs.paddleB.movePaddleDown();
 		}
 
-		if (this.$refs.ball && this.$refs.paddleA)
+		if (this.socket && this.$refs.ball && this.$refs.paddleA && this.$refs.paddleB)
 		{
-			if (!this.$refs.ball.moveBall(
-				this.$refs.paddleA.getPaddleX(), 
-				this.$refs.paddleA.getPaddleY(), 
-				this.$refs.paddleA.getPaddleWidth(), 
-				this.$refs.paddleA.getPaddleHeight()))
-					this.resetGame();
+			this.socket.emit("ballMove");
+			// if (!this.$refs.ball.moveBall(
+			// 	this.$refs.paddleA.getPaddleX(), 
+			// 	this.$refs.paddleA.getPaddleY(), 
+			// 	this.$refs.paddleA.getPaddleWidth(), 
+			// 	this.$refs.paddleA.getPaddleHeight()))
+			// 		this.resetGame();
 		}
+	
 
 		requestAnimationFrame(this.update);
 	},

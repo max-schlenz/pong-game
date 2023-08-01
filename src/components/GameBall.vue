@@ -48,6 +48,26 @@ export default {
       this.dy=2;
     },
 
+	setX(x){
+		this.x = x;
+	},
+
+	setY(y){
+		this.y = y;
+	},
+
+	setDx(dx){
+		this.dx = dx;
+	},
+
+	setDy(dy){
+		this.dy = dy;
+	},
+
+	setSpeed(speed){
+		this.speed = speed;
+	},
+
     moveBallDir(paddleX, paddleY, paddleWidth, paddleHeight) {
       let paddleMid = paddleY + (paddleHeight / 2);
       let ballMid = this.y + (this.hgt / 2);

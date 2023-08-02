@@ -12,7 +12,7 @@ module.exports = defineConfig({
       watch: true,
       watchOptions: {
           ignored: /node_modules/,
-          poll: 500,
+          poll: 200,
       },
   },
   transpileDependencies: true,

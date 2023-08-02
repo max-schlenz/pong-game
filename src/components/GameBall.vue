@@ -48,45 +48,62 @@ export default {
       this.dy=2;
     },
 
-    moveBallDir(paddleX, paddleY, paddleWidth, paddleHeight) {
-      let paddleMid = paddleY + (paddleHeight / 2);
-      let ballMid = this.y + (this.hgt / 2);
-      let paddleHitLocation = (ballMid - paddleMid) / (paddleHeight / 2);
-      let bounceAngle = (paddleHitLocation * 45) * Math.PI / 180;
+	setX(x) {
+		this.x = x;
+	},
+	
+
+	setY(y) {
+		this.y = y;
+	},
+
+	// setX(x) {
+	// 	this.x = x;
+	// },
+
+	// setX(x) {
+	// 	this.x = x;
+	// },
+
+    // moveBallDir(paddleX, paddleY, paddleWidth, paddleHeight) {
+    //   let paddleMid = paddleY + (paddleHeight / 2);
+    //   let ballMid = this.y + (this.hgt / 2);
+    //   let paddleHitLocation = (ballMid - paddleMid) / (paddleHeight / 2);
+    //   let bounceAngle = (paddleHitLocation * 45) * Math.PI / 180;
         
-      this.dx = -this.speed * Math.cos(bounceAngle);
-      this.dy = this.speed * Math.sin(bounceAngle);
-      this.dx = -this.dx;
+    //   this.dx = -this.speed * Math.cos(bounceAngle);
+    //   this.dy = this.speed * Math.sin(bounceAngle);
+    //   this.dx = -this.dx;
       
-      this.x = paddleX + paddleWidth; //fix ball sometimes glitching into paddle
-      this.speed++;
-    },
+    //   this.x = paddleX + paddleWidth; //fix ball sometimes glitching into paddle
+    //   this.speed++;
+    // },
     
-    moveBall(paddleX, paddleY, paddleWidth, paddleHeight) {
-      let nextBallX = this.x + this.dx;
-      let nextBallY = this.y + this.dy;
+    // moveBall(paddleX, paddleY, paddleWidth, paddleHeight) {
+    //   let nextBallX = this.x + this.dx;
+    //   let nextBallY = this.y + this.dy;
 
-      if ((nextBallX < 0) ) // || nextBallY + this.wid > this.fieldWidth)
-        return false;
+    //   if ((nextBallX < 0) ) // || nextBallY + this.wid > this.fieldWidth)
+    //     return false;
 
-      else if (nextBallX + this.wid > this.fieldWidth)
-       this.dx = -this.dx;
+    //   else if (nextBallX + this.wid > this.fieldWidth)
+    //    this.dx = -this.dx;
     
-      else if (nextBallY + this.hgt > this.fieldHeight || nextBallY < 0)
-       this.dy = -this.dy;
+    //   else if (nextBallY + this.hgt > this.fieldHeight || nextBallY < 0)
+    //    this.dy = -this.dy;
   
-      else if ((nextBallX + this.wid >= paddleX) &&
-        (nextBallX < paddleX + paddleWidth) &&
-        (nextBallY + this.hgt >= paddleY) &&
-        (nextBallY < paddleY + paddleHeight))
-          this.moveBallDir(paddleX, paddleY, paddleWidth, paddleHeight);
+    //   else if ((nextBallX + this.wid >= paddleX) &&
+    //     (nextBallX < paddleX + paddleWidth) &&
+    //     (nextBallY + this.hgt >= paddleY) &&
+    //     (nextBallY < paddleY + paddleHeight))
+    //       this.moveBallDir(paddleX, paddleY, paddleWidth, paddleHeight);
       
-      else {
-        this.x = nextBallX;
-        this.y = nextBallY;
-      }
-      return true;
-    }
+    //   else {
+    //     this.x = nextBallX;
+    //     this.y = nextBallY;
+    //   }
+    //   return true;
+    // }
   }
 }
 </script>

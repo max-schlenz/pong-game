@@ -17,10 +17,13 @@
 			:socket="socket"
 			/>
 		</div>
+		<div class="ball-coordinates" v-if="ballCoordinates">
+			Ball Position: x = {{ ballCoordinates.x }}, y = {{ ballCoordinates.y }}
+		</div>
 		<form @submit.prevent="connectToWS">
-      <input type="text" v-model="serverIp" placeholder="Enter Server IP"/>
-      <button type="submit">Connect</button>
-    </form>
+			<input type="text" v-model="serverIp" placeholder="Enter Server IP"/>
+			<button type="submit">Connect</button>
+		</form>
 	</div>
 </template>
 
@@ -71,7 +74,9 @@ export default {
 		socket: null,
 		serverIp: null,
 
-		side: null
+		side: null,
+
+		ballCoordinates: null
 	}
   },
 
@@ -142,6 +147,7 @@ export default {
 			this.socket.on("ballPosition", ({ x, y }) => {
 				this.$refs.ball.setX(x);
 				this.$refs.ball.setY(y);
+				this.ballCoordinates = ({x, y});
 				// console.log("ball: ", x, "x", y);
 			});
 
@@ -237,7 +243,6 @@ export default {
   created() {
 	window.addEventListener('keydown', this.keyHookDown);
 	window.addEventListener('keyup', this.keyHookUp);
-	window.addEventListener('mousemove', this.updateMousePosition);
   }
 }
 </script>

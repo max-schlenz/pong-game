@@ -64,6 +64,7 @@ export default {
 	// setX(x) {
 	// 	this.x = x;
 	// },
+	
 
     // moveBallDir(paddleX, paddleY, paddleWidth, paddleHeight) {
     //   let paddleMid = paddleY + (paddleHeight / 2);

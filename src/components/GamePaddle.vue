@@ -57,34 +57,17 @@ export default {
 		},
 
 		movePaddleUp() {
-			if (this.y > this.speed)
-				this.y -= this.speed;
-			else
-				this.y = 0;
-
 			let data = {
-				paddleX: this.x,
-				paddleY: this.y,
-				paddleWidth: this.wid,
-				paddleHeight: this.hgt
+				direction: "up"
 			};
 			
 			this.socket.emit('paddleMove', data);
 		},
 
 		movePaddleDown() {
-			if (this.y >= (this.fieldHeight - this.hgt - 1))
-				this.y = this.fieldHeight - this.hgt;
-			else
-				this.y += this.speed;
-
 			let data = {
-				paddleX: this.x,
-				paddleY: this.y,
-				paddleWidth: this.wid,
-				paddleHeight: this.hgt
+				direction: "down"
 			};
-
 			this.socket.emit('paddleMove', data);
 		}
 	}

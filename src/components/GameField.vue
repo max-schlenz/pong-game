@@ -135,12 +135,12 @@ export default {
 			if (playerId == 'left')
 			{
 				this.$refs.paddleA.setY(newPos);
-				// console.log(playerId, ": ", newPos);
+				console.log(playerId, ": ", newPos);
 			}
 			else
 			{	
 				this.$refs.paddleB.setY(newPos);
-				// console.log(playerId, ": ", newPos);
+				console.log(playerId, ": ", newPos);
 			}
 			});
 

@@ -39,8 +39,8 @@ export default {
   methods: {
 
     resetBall() {
-      this.x=500;
-      this.y=200;
+      this.x=0;
+      this.y=0;
       this.wid=15;
       this.hgt=15;
       this.speed=5;

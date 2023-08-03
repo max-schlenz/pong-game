@@ -16,7 +16,7 @@ export default {
 			x: 1,
 			y: 100,
 			wid: 15,
-			hgt: 120,
+			hgt: 100,
 			speed: 7
 		}
 	},

@@ -17,9 +17,9 @@
 			:socket="socket"
 			/>
 		</div>
-		<div class="ball-coordinates" v-if="ballCoordinates">
+		<!-- <div class="ball-coordinates" v-if="ballCoordinates">
 			Ball Position: x = {{ ballCoordinates.x }}, y = {{ ballCoordinates.y }}
-		</div>
+		</div> -->
 		<form @submit.prevent="connectToWS">
 			<input type="text" v-model="serverIp" placeholder="Enter Server IP"/>
 			<button type="submit">Connect</button>

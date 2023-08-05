@@ -21,11 +21,6 @@ export default {
 		}
 	},
 
-	// watch: {
-	// 	y(newY) {
-	// 		this.socket.emit('paddleY', newY);
-	// 	}
-	// },
 
 	methods: {
 		getPaddleX() {

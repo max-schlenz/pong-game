@@ -81,16 +81,6 @@ export default {
 	},
 	
 	methods: {
-		resetGame() {
-			this.$refs.ball.resetBall()
-			this.hitCount = 0;
-			this.isMovingUpA = false;
-			this.isMovingDownA = false;
-			
-			this.isMovingUpB = false;
-			this.isMovingDownB = false;
-		},
-		
 		connectToWS() {
 			if (this.socket)
 			this.socket.close();
@@ -153,16 +143,6 @@ export default {
 			}
 			
 			requestAnimationFrame(this.update);
-		},
-		
-		updateMousePosition(event) {
-			this.mouseX = event.clientX;
-			this.mouseY = event.clientY;
-		},
-		
-		checkGameOver() {
-			if (this.$refs.ball.ballX < 10)// || this.ballX > window.innerWidth - 20)
-			this.resetGame();
 		},
 		
 		keyHookDown(e) {
